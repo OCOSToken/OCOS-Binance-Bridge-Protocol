@@ -1,0 +1,58 @@
+# 🔁 OCOS ↔ Binance Liquidity Bridge – Architecture Diagram
+
+**File Location:** `diagrams/liquidity-bridge-flow.drawio`  
+**Version:** v1.0  
+**Last Updated:** June 11, 2025  
+**Status:** ✅ Verified by Core Team  
+**Related Docs:**
+- [`docs/audit/certik-final-audit.md`](../docs/audit/certik-final-audit.md)
+- [`docs/tokenomics/OCOSDistribution.md`](../docs/tokenomics/OCOSDistribution.md)
+- [`docs/architecture/contractFlow.md`](../docs/architecture/contractFlow.md)
+
+---
+
+## 📄 Description
+
+This diagram illustrates the **liquidity flow architecture** between OCOS Token smart contracts and the Binance CEX integration. It visualizes the bridge, oracles, reserve vaults, price syncing, and transaction validation layers.
+
+This visual is intended for developers, auditors, and stakeholders to understand how on-chain and off-chain systems interact during:
+
+- Deposits to OCOS from Binance
+- Withdrawals from OCOS to Binance
+- Real-time reserve proofing
+- Oracle-based price enforcement
+- Multisig-controlled liquidity release
+
+---
+
+## 🧠 Conceptual Flow (Diagram Components)
+
+| Component                     | Description                                              |
+|------------------------------|----------------------------------------------------------|
+| 🟦 Binance CEX               | Centralized exchange initiating deposit/withdrawal       |
+| 🔄 OCOSBridge.sol            | On-chain contract validating and emitting token flows    |
+| 🔐 OCOSReserveVault.sol      | Holds locked OCOS, BNB, and stablecoin reserves          |
+| 📡 Chainlink Oracle          | Confirms token price and sync status                     |
+| 🔁 Liquidity Manager         | Rebalances OCOS/BNB/USDT pool shares                     |
+| 🔓 DAO Multisig              | Controls final unlock or burn operations                 |
+
+---
+
+## 🧷 Diagram Access
+
+You can view or edit the `.drawio` file using any of the following tools:
+
+- **[draw.io (diagrams.net)](https://app.diagrams.net/)** – Open locally or from GitHub  
+- **Visual Studio Code + Draw.io Extension** – Native editing in repo  
+- **PDF/PNG Export** – Available in `diagrams/exports/` (if present)
+
+---
+
+## 🛡️ Integrity Notice
+
+All visual elements are locked and reviewed by the OCOS Core Architecture Team. Any changes should be submitted via pull request and approved through the DAO documentation review process.
+
+---
+
+> _“In the age of programmable finance, liquidity should be visual, verifiable, and decentralized.”_  
+> — Ocoshy Nakomoto
