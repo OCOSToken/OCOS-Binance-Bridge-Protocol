@@ -1,0 +1,26 @@
+```mermaid
+graph TD
+    %% Entities
+    User[👤 User Wallet]
+    BinanceAPI[🔗 Binance CEX API]
+    OCOSBridge[🧱 OCOSBridge.sol]
+    LiquidityManager[💧 BinanceLiquidityManager.sol]
+    OCOSToken[💠 OCOS BEP20 Token]
+    ChainlinkOracle[📡 Chainlink Oracle]
+    Vault[🏦 OCOSReserveVault.sol]
+    ReserveMonitor[🧿 OCOSReserveMonitor.sol]
+
+    %% Flow Connections
+    User -->|Deposit OCOS on Binance| BinanceAPI
+    BinanceAPI -->|Trigger Deposit | OCOSBridge
+    OCOSBridge -->|Mint/Transfer| OCOSToken
+    OCOSBridge -->|Notify| LiquidityManager
+    LiquidityManager -->|Sync Price| ChainlinkOracle
+    LiquidityManager -->|Update Balances| Vault
+    Vault -->|Emit Proof| ReserveMonitor
+    ReserveMonitor -->|Oracle Logs| ChainlinkOracle
+
+    %% Withdraw Flow
+    User -->|Request Withdrawal| OCOSBridge
+    OCOSBridge -->|Burn/Lock OCOS| OCOSToken
+    OCOSBridge -->|Notify Binance| BinanceAPI
