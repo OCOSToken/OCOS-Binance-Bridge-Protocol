@@ -1,0 +1,62 @@
+# 📦 ci-cd/workflows/deploy.yml
+
+name: 🚀 OCOS Smart Contract Deploy Workflow
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'contracts/**'
+      - 'scripts/deploy/**'
+      - '.github/workflows/deploy.yml'
+
+jobs:
+  deploy:
+    name: 🔄 Smart Contract Deployment
+    runs-on: ubuntu-latest
+
+    environment: production
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 🔧 Install Dependencies
+        run: npm install
+
+      - name: 🧪 Run Tests Before Deploy
+        run: npm run test
+
+      - name: 🔐 Setup Hardhat Credentials
+        env:
+          PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          INFURA_KEY: ${{ secrets.INFURA_API_KEY }}
+        run: |
+          echo "// Setup complete"
+
+      - name: 🚀 Deploy to BSC Mainnet
+        env:
+          PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          BSC_RPC_URL: ${{ secrets.BSC_RPC_URL }}
+        run: |
+          npx hardhat run scripts/deploy/deployOCOSBridge.ts --network bsc
+
+      - name: 📣 Notify Binance (Optional Hook)
+        if: success()
+        run: |
+          curl -X POST https://binance.com/api/hook/notify \
+            -H "Authorization: Bearer ${{ secrets.BINANCE_HOOK_TOKEN }}" \
+            -d '{"status":"Deployed","contract":"OCOSBridge"}'
+
+      - name: ✅ Commit Deployment Tag
+        run: |
+          git config user.name "OCOS CI Bot"
+          git config user.email "ci@ocos.io"
+          git tag -a "v$(date +'%Y%m%d%H%M%S')" -m "OCOS Smart Contract Deployed"
+          git push origin --tags
